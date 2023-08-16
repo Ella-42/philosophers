@@ -6,7 +6,7 @@
 #    By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/05 20:49:34 by lpeeters          #+#    #+#              #
-#    Updated: 2023/08/14 21:38:16 by lpeeters         ###   ########.fr        #
+#    Updated: 2023/08/16 21:46:33 by lpeeters         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ RM = rm -rf
 CFLAGS = -g -Wall -Wextra -Werror
 
 #redirect output to /dev/null to silence it
-OUT =# > /dev/null
+OUT = > /dev/null
 
 #find sources
 SRCS = ${shell find . -name "*.c" -not -path "*lib*"}
@@ -69,29 +69,30 @@ MKFL_ALL = ${foreach mkfldir,${MKFL_DIRS}, make -C ${mkfldir} ${OUT} ;}
 
 #make object files
 ${OBJ_DIR}%.o: %.c
-	${MK_DIR}
-	${CC} ${CFLAGS} -c $< -o $@
+	@${MK_DIR}
+	@${CC} ${CFLAGS} -c $< -o $@
 
 #make
 all: MK ${NAME}
+	@${OUT}
 
 #make project into program
 ${NAME}: ${OBJS} ${HEADERS}
-	${CC} ${OBJS} ${HDR_ALL} ${LIB_ALL} ${MLXFLAGS} -o ${NAME}
-	chmod +x ${NAME}
+	@${CC} ${OBJS} ${HDR_ALL} ${LIB_ALL} ${MLXFLAGS} -o ${NAME}
+	@chmod +x ${NAME}
 
 #make library
 MK:
-	${MKFL_ALL}
+	@${MKFL_ALL}
 
 #clean object files and directories
 clean:
-	${RM} ${OBJ_DIR}
-	${foreach mkfldir,${MKFL_DIRS}, make -C ${mkfldir} fclean ${OUT} ;}
+	@${RM} ${OBJ_DIR}
+	@${foreach mkfldir,${MKFL_DIRS}, make -C ${mkfldir} fclean ${OUT} ;}
 
 #clean everything that was made
 fclean: clean
-	${RM} ${NAME}
+	@${RM} ${NAME}
 
 #remake
 re: fclean all
