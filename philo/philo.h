@@ -6,17 +6,11 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/14 21:27:41 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/08/15 16:08:13 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
-
-//printf
-# include <stdio.h>
-
-//malloc, free
-# include <stdlib.h>
 
 #endif

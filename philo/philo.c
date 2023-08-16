@@ -6,13 +6,15 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:23:51 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/14 21:27:47 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/08/15 16:08:17 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(void)
+int	main(int ac, char **av)
 {
-	printf("Ready for a fresh start\n");
+	(void)av;
+	if (5 > ac || ac > 6)
+		return (1);
 }
