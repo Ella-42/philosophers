@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 19:37:10 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/18 19:42:10 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/08/21 19:00:29 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,25 @@ void	arg2struct(char **av, t_arguments *args, int ac)
 	args->t2s = micro_atoi(av[4]);
 	if (ac == 6)
 		args->loop_nb = micro_atoi(av[5]);
+}
+
+//testing
+void	*test(void *arg)
+{
+	(void)arg;
+	return (NULL);
+}
+
+//initialize pthreads
+void	mk_pthreads(t_arguments *args, t_pthread_array *pta)
+{
+	int	i;
+
+	pta->pt = malloc(sizeof(t_pthread) * args->p_nb);
+	i = 0;
+	while (i < args->p_nb)
+		pthread_create(&pta->pt[i++].thread, NULL, test, NULL);
+	i = 0;
+	while (i < args->p_nb)
+		pthread_join(pta->pt[i++].thread, NULL);
 }

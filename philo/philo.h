@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/18 19:42:04 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/08/21 18:43:17 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,14 @@
 
 /*libraries*/
 
-//exit
+//exit, malloc, free
 # include <stdlib.h>
 
 //printf
 # include <stdio.h>
+
+//pthread_create
+# include <pthread.h>
 
 //error codes (simulating errno)
 # define ARGUMENT 22
@@ -34,6 +37,18 @@ typedef struct s_arguments
 	int	t2s;
 	int	loop_nb;
 }		t_arguments;
+
+//individual phtread data with their ID
+typedef struct s_pthread
+{
+	pthread_t	thread;
+}				t_pthread;
+
+//data array of pthreads
+typedef struct s_pthread_array
+{
+	t_pthread	*pt;
+}				t_pthread_array;
 
 /**********************/
 /*       philo        */
@@ -54,5 +69,7 @@ int		micro_atoi(char *str);
 
 //convert arguments into integer values and assign them to a structure
 void	arg2struct(char **av, t_arguments *args, int ac);
+
+void	mk_pthreads(t_arguments *args, t_pthread_array *pta);
 
 #endif

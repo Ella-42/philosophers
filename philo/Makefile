@@ -6,7 +6,7 @@
 #    By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/05 20:49:34 by lpeeters          #+#    #+#              #
-#    Updated: 2023/08/16 21:46:33 by lpeeters         ###   ########.fr        #
+#    Updated: 2023/08/21 19:01:54 by lpeeters         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 NAME = philo
 
 #compiler
-CC = cc
+CC = cc -pthread
 
 #remove
 RM = rm -rf
