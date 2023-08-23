@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/21 18:43:17 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/08/23 22:39:14 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,25 @@ typedef struct s_arguments
 	int	loop_nb;
 }		t_arguments;
 
-//individual phtread data with their ID
-typedef struct s_pthread
-{
-	pthread_t	thread;
-}				t_pthread;
-
 //data array of pthreads
 typedef struct s_pthread_array
 {
-	t_pthread	*pt;
+	pthread_t	*pt;
 }				t_pthread_array;
+
+//data array of mutexes
+typedef struct s_mutex_array
+{
+	pthread_mutex_t	*mtx;
+}					t_mutex_array;
+
+//main struct within which all data is stored
+typedef struct s_main
+{
+	t_arguments		args;
+	t_pthread_array	pta;
+	t_mutex_array	mtxa;
+}					t_main;
 
 /**********************/
 /*       philo        */
@@ -70,6 +78,17 @@ int		micro_atoi(char *str);
 //convert arguments into integer values and assign them to a structure
 void	arg2struct(char **av, t_arguments *args, int ac);
 
+//initialize pthreads
 void	mk_pthreads(t_arguments *args, t_pthread_array *pta);
+
+//initialize mutexes
+void	mk_mutexes(t_arguments *args, t_mutex_array *mtxa);
+
+/**********************/
+/*       logic        */
+/**********************/
+
+//silence the errors
+void	*anti_error(void *arg);
 
 #endif

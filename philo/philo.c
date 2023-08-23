@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:23:51 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/21 18:25:22 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/08/23 22:34:41 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,18 @@ void	error(int type)
 //create threads, mutexes and run a simulation to test these
 int	main(int ac, char **av)
 {
-	t_arguments		args;
-	t_pthread_array	pta;
+	t_main	main;
 
 	if (5 > ac || ac > 6)
 		error(ARGUMENT);
-	arg2struct(av, &args, ac);
-	mk_pthreads(&args, &pta);
-	printf("philosophers: %i\n", args.p_nb);
-	printf("time to die: %i\n", args.t2d);
-	printf("time to eat: %i\n", args.t2e);
-	printf("time to sleep: %i\n", args.t2s);
-	if (args.loop_nb)
-		printf("number of times each philosopher must eat: %i\n", args.loop_nb);
+	arg2struct(av, &main.args, ac);
+	mk_pthreads(&main.args, &main.pta);
+	mk_mutexes(&main.args, &main.mtxa);
+	printf("philosophers: %i\n", main.args.p_nb);
+	printf("time to die: %i\n", main.args.t2d);
+	printf("time to eat: %i\n", main.args.t2e);
+	printf("time to sleep: %i\n", main.args.t2s);
+	if (main.args.loop_nb)
+		printf("number of times each philosopher must eat: %i\n",
+			main.args.loop_nb);
 }
