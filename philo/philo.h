@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/24 14:47:12 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/08/25 19:41:57 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_arguments
 typedef struct s_pthread_array
 {
 	pthread_t	*pt;
+	int			id;
 }				t_pthread_array;
 
 //data array of mutexes
@@ -57,6 +58,13 @@ typedef struct s_main
 	t_pthread_array	pta;
 	t_mutex_array	mtxa;
 }					t_main;
+
+//philisopher data
+typedef struct s_pdata
+{
+	int		id;
+	t_main	main;
+}			t_pdata;
 
 /**********************/
 /*       philo        */
@@ -76,19 +84,19 @@ int		main(int ac, char **av);
 int		micro_atoi(char *str);
 
 //convert arguments into integer values and assign them to a structure
-void	arg2struct(char **av, t_arguments *args, int ac);
-
-//initialize pthreads
-void	mk_pthreads(t_arguments *args, t_pthread_array *pta);
+void	arg2struct(int ac, char **av, t_arguments *args);
 
 //initialize mutexes
 void	mk_mutexes(t_arguments *args, t_mutex_array *mtxa);
+
+//initialize pthreads
+void	mk_pthreads(t_arguments *args, t_pthread_array *pta, t_main *main);
 
 /**********************/
 /*       logic        */
 /**********************/
 
-//silence the errors
-void	*anti_error(void *arg);
+//philisopher's behavior
+void	*routine(void *p_id_ptr);
 
 #endif

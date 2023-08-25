@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:23:51 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/24 14:47:44 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/08/25 17:56:00 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,9 @@ int	main(int ac, char **av)
 {
 	t_main	main;
 
-	if (5 > ac || ac > 6)
+	if (ac != 5 && ac != 6)
 		error(ARGUMENT);
-	arg2struct(av, &main.args, ac);
-	mk_pthreads(&main.args, &main.pta);
+	arg2struct(ac, av, &main.args);
 	mk_mutexes(&main.args, &main.mtxa);
-	printf("philosophers: %i\n", main.args.p_nb);
-	printf("time to die: %i\n", main.args.t2d);
-	printf("time to eat: %i\n", main.args.t2e);
-	printf("time to sleep: %i\n", main.args.t2s);
-	if (main.args.loop_nb)
-		printf("number of times each philosopher must eat: %i\n",
-			main.args.loop_nb);
+	mk_pthreads(&main.args, &main.pta, &main);
 }
