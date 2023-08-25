@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/25 19:41:57 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/08/25 22:54:32 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 //exit, malloc, free
 # include <stdlib.h>
 
-//printf
+//printf, perror
 # include <stdio.h>
 
 //pthread_create
@@ -26,6 +26,7 @@
 
 //error codes (simulating errno)
 # define ARGUMENT 22
+# define MEM 12
 
 //argument data structure
 typedef struct s_arguments
@@ -71,7 +72,7 @@ typedef struct s_pdata
 /**********************/
 
 //error handler
-void	error(int type);
+void	error(int type, t_main *main, t_pdata *pdata);
 
 //create threads, mutexes and run a simulation to test these
 int		main(int ac, char **av);
@@ -87,7 +88,7 @@ int		micro_atoi(char *str);
 void	arg2struct(int ac, char **av, t_arguments *args);
 
 //initialize mutexes
-void	mk_mutexes(t_arguments *args, t_mutex_array *mtxa);
+void	mk_mutexes(t_arguments *args, t_mutex_array *mtxa, t_main *main);
 
 //initialize pthreads
 void	mk_pthreads(t_arguments *args, t_pthread_array *pta, t_main *main);
