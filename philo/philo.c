@@ -6,14 +6,14 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:23:51 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/13 15:23:10 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/13 18:52:05 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 //error handler
-void	error(int type, t_main *main, t_pdata *pdata)
+void	error(int type, t_pdata *pdata)
 {
 	if (type == ARGUMENT)
 		printf("Error:\nInvalid argument(s)\nUsage: ./philo "
@@ -22,10 +22,10 @@ void	error(int type, t_main *main, t_pdata *pdata)
 	else if (type == MEM)
 	{
 		perror("Malloc");
-		if (main->mtxa.mtx)
-			free(main->mtxa.mtx);
-		if (main->pta.pt)
-			free(main->pta.pt);
+		if (pdata->mtxa.mtx)
+			free(pdata->mtxa.mtx);
+		if (pdata->pta.pt)
+			free(pdata->pta.pt);
 		if (pdata)
 			free(pdata);
 	}
@@ -33,24 +33,24 @@ void	error(int type, t_main *main, t_pdata *pdata)
 }
 
 //exit the program in a clean way
-void	exiter(t_main *main)
+void	exiter(t_pdata *pdata)
 {
-	if (main->mtxa.mtx)
-		free(main->mtxa.mtx);
-	if (main->pta.pt)
-		free(main->pta.pt);
+	if (pdata->mtxa.mtx)
+		free(pdata->mtxa.mtx);
+	if (pdata->pta.pt)
+		free(pdata->pta.pt);
 	exit(EXIT_SUCCESS);
 }
 
 //create threads, mutexes and run a simulation to test these
 int	main(int ac, char **av)
 {
-	t_main	main;
+	t_pdata	pdata;
 
 	if (ac != 5 && ac != 6)
-		error(ARGUMENT, NULL, NULL);
-	arg2struct(ac, av, &main.args);
-	mk_mutexes(&main.args, &main.mtxa, &main);
-	mk_pthreads(&main.args, &main.pta, &main);
-	exiter(&main);
+		error(ARGUMENT, NULL);
+	arg2struct(ac, av, &pdata.args);
+	mk_mutexes(&pdata.args, &pdata.mtxa, &pdata);
+	mk_pthreads(&pdata.args, &pdata.pta, &pdata);
+	exiter(&pdata);
 }

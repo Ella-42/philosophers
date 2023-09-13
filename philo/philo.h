@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/13 15:23:12 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:42:29 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ typedef struct s_arguments
 typedef struct s_pthread_array
 {
 	pthread_t	*pt;
-	int			id;
 }				t_pthread_array;
 
 //data array of mutexes
@@ -52,30 +51,24 @@ typedef struct s_mutex_array
 	pthread_mutex_t	*mtx;
 }					t_mutex_array;
 
-//main struct within which all data is stored
-typedef struct s_main
-{
-	t_arguments		args;
-	t_pthread_array	pta;
-	t_mutex_array	mtxa;
-}					t_main;
-
 //philisopher data
 typedef struct s_pdata
 {
-	int		id;
-	t_main	main;
-}			t_pdata;
+	int				id;
+	t_arguments		args;
+	t_pthread_array	pta;
+	t_mutex_array	mtxa;
+}					t_pdata;
 
 /**********************/
 /*       philo        */
 /**********************/
 
 //error handler
-void	error(int type, t_main *main, t_pdata *pdata);
+void	error(int type, t_pdata *pdata);
 
 //exit the program in a clean way
-void	exiter(t_main *main);
+void	exiter(t_pdata *pdata);
 
 //create threads, mutexes and run a simulation to test these
 int		main(int ac, char **av);
@@ -91,10 +84,10 @@ int		micro_atoi(char *str);
 void	arg2struct(int ac, char **av, t_arguments *args);
 
 //initialize mutexes
-void	mk_mutexes(t_arguments *args, t_mutex_array *mtxa, t_main *main);
+void	mk_mutexes(t_arguments *args, t_mutex_array *mtxa, t_pdata *pdata);
 
 //initialize pthreads
-void	mk_pthreads(t_arguments *args, t_pthread_array *pta, t_main *main);
+void	mk_pthreads(t_arguments *args, t_pthread_array *pta, t_pdata *pdata);
 
 /**********************/
 /*       logic        */
