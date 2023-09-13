@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/25 22:54:32 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:23:12 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,9 @@ typedef struct s_pdata
 
 //error handler
 void	error(int type, t_main *main, t_pdata *pdata);
+
+//exit the program in a clean way
+void	exiter(t_main *main);
 
 //create threads, mutexes and run a simulation to test these
 int		main(int ac, char **av);

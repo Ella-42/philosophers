@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:23:51 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/08/25 23:21:19 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:23:10 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	error(int type, t_main *main, t_pdata *pdata)
 	exit(type);
 }
 
+//exit the program in a clean way
 void	exiter(t_main *main)
 {
 	if (main->mtxa.mtx)
