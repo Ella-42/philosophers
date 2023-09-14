@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/13 22:25:42 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/14 23:56:19 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ void	arg2struct(int ac, char **av, t_arguments *args);
 void	mk_mutexes(t_arguments *args, t_mutex_array *mtxa, t_pdata *pdata);
 
 //initialize pthreads
-void	mk_pthreads(t_arguments *args, t_pthread_array *pta, t_pdata *pdata);
+void	mk_pthreads(t_arguments *args, t_pthread_array *pta,
+			t_mutex_array *mtxa, t_pdata *pdata);
 
 /**********************/
 /*       logic        */

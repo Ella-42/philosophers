@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 19:37:10 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/13 22:25:46 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/14 23:56:49 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,13 @@ void	mk_mutexes(t_arguments *args, t_mutex_array *mtxa, t_pdata *pdata)
 		error(MEM, pdata);
 	i = 0;
 	while (i < args->f_nb)
-		pthread_mutex_init(&mtxa->mtx[i++], NULL);
+		if (pthread_mutex_init(&mtxa->mtx[i++], NULL))
+			error(MEM, pdata);
 }
 
 //initialize pthreads
-void	mk_pthreads(t_arguments *args, t_pthread_array *pta, t_pdata *pdata)
+void	mk_pthreads(t_arguments *args, t_pthread_array *pta,
+			t_mutex_array *mtxa, t_pdata *pdata)
 {
 	int		i;
 
@@ -68,6 +70,7 @@ void	mk_pthreads(t_arguments *args, t_pthread_array *pta, t_pdata *pdata)
 		if (!pdata)
 			error(MEM, pdata);
 		pdata->args = *args;
+		pdata->mtxa = *mtxa;
 		pdata->id = i + 1;
 		printf("id: %i\n", pdata->id);
 		if (pthread_create(&pta->pt[i], NULL, routine, pdata))
@@ -76,4 +79,7 @@ void	mk_pthreads(t_arguments *args, t_pthread_array *pta, t_pdata *pdata)
 	i = 0;
 	while (i < args->p_nb)
 		pthread_join(pta->pt[i++], NULL);
+	i = 0;
+	while (i < args->f_nb)
+		pthread_mutex_destroy(&mtxa->mtx[i++]);
 }
