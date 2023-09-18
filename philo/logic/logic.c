@@ -6,11 +6,34 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 22:38:33 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/14 23:34:14 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/18 20:28:06 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
+	//printf("philosopher %i with fork %i on their right"
+		//" and fork %i on their left\n", pdata->id, rf, lf);
+
+void	fork_handler(t_pdata *pdata, int lf, int rf)
+{
+	if (pthread_mutex_lock(&pdata->mtxa.mtx[lf - 1]) != 0)
+		printf("Mutex lock error on fork %i\n", lf);
+	printf("Philosopher %i has taken fork %i\n", pdata->id, lf);
+	if (pthread_mutex_lock(&pdata->mtxa.mtx[rf - 1]) != 0)
+		printf("Mutex lock error on fork %i\n", rf);
+	printf("Philosopher %i has taken fork %i\n", pdata->id, rf);
+	printf("Philosopher %i is eating\n", pdata->id);
+	usleep(20000);
+	if (pthread_mutex_unlock(&pdata->mtxa.mtx[lf - 1]) != 0)
+		printf("Mutex unlock error on fork %i\n", lf);
+	printf("Philosopher %i dropped fork %i\n", pdata->id, lf);
+	if (pthread_mutex_unlock(&pdata->mtxa.mtx[rf - 1]) != 0)
+		printf("Mutex unlock error on fork %i\n", rf);
+	printf("Philosopher %i dropped fork %i\n", pdata->id, rf);
+}
+
+	//printf("time to eat in microseconds: %i\n", pdata->args.t2e * 100);
 
 //philisopher's behavior
 void	*routine(void *pdata_ptr)
@@ -26,16 +49,7 @@ void	*routine(void *pdata_ptr)
 	lf = pdata->id;
 	if (pdata->id == 1)
 		rf = pdata->args.p_nb;
-	printf("philosopher %i with fork %i on their right"
-		" and fork %i on their left\n", pdata->id, rf, lf);
-	if (pthread_mutex_lock(&pdata->mtxa.mtx[lf]) != 0)
-		printf("Fork %i was already taken\n", lf);
-	//if (pthread_mutex_lock(&pdata->mtxa.mtx[rf]) != 0)
-		//printf("Fork %i was already taken\n", rf);
-	//pthread_mutex_lock(&pdata->mtxa.mtx[lf]);
-	//pthread_mutex_lock(&pdata->mtxa.mtx[rf]);
-	//pthread_mutex_unlock(&pdata->mtxa.mtx[lf]);
-	//pthread_mutex_unlock(&pdata->mtxa.mtx[rf]);
+	fork_handler(pdata, lf, rf);
 	free(pdata);
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:23:51 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/14 23:37:15 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/18 20:03:57 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,16 @@ void	error(int type, t_pdata *pdata)
 	exit(type);
 }
 
+//exit the program in a clean way
+void	exiter(t_pdata *pdata)
+{
+	if (pdata->mtxa.mtx)
+		free(pdata->mtxa.mtx);
+	if (pdata->pta.pt)
+		free(pdata->pta.pt);
+	exit(EXIT_SUCCESS);
+}
+
 //create threads, mutexes and run a simulation to test these
 int	main(int ac, char **av)
 {
@@ -42,4 +52,5 @@ int	main(int ac, char **av)
 	arg2struct(ac, av, &pdata.args);
 	mk_mutexes(&pdata.args, &pdata.mtxa, &pdata);
 	mk_pthreads(&pdata.args, &pdata.pta, &pdata.mtxa, &pdata);
+	exiter(&pdata);
 }

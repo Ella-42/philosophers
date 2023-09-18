@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 19:37:10 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/14 23:56:49 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/18 20:20:43 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	mk_pthreads(t_arguments *args, t_pthread_array *pta,
 		pdata->args = *args;
 		pdata->mtxa = *mtxa;
 		pdata->id = i + 1;
-		printf("id: %i\n", pdata->id);
 		if (pthread_create(&pta->pt[i], NULL, routine, pdata))
 			error(MEM, pdata);
 	}

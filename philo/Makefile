@@ -6,7 +6,7 @@
 #    By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/05 20:49:34 by lpeeters          #+#    #+#              #
-#    Updated: 2023/08/21 19:01:54 by lpeeters         ###   ########.fr        #
+#    Updated: 2023/09/18 18:20:24 by lpeeters         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,7 +78,7 @@ all: MK ${NAME}
 
 #make project into program
 ${NAME}: ${OBJS} ${HEADERS}
-	@${CC} ${OBJS} ${HDR_ALL} ${LIB_ALL} ${MLXFLAGS} -o ${NAME}
+	@${CC} ${OBJS} ${HDR_ALL} ${LIB_ALL} -o ${NAME}
 	@chmod +x ${NAME}
 
 #make library

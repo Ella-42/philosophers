@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/14 23:56:19 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/18 20:10:47 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,16 @@
 //pthread_create
 # include <pthread.h>
 
+//usleep
+# include <unistd.h>
+
+/*macros*/
+
 //error codes (simulating errno)
 # define ARGUMENT 22
 # define MEM 12
+
+/*data structures*/
 
 //argument data structure
 typedef struct s_arguments
@@ -59,6 +66,8 @@ typedef struct s_pdata
 	t_pthread_array	pta;
 	t_mutex_array	mtxa;
 }					t_pdata;
+
+/*functions*/
 
 /**********************/
 /*       philo        */
