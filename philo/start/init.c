@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 19:37:10 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/18 20:20:43 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/20 01:25:28 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ void	arg2struct(int ac, char **av, t_arguments *args)
 	args->t2s = micro_atoi(av[4]);
 	if (ac == 6)
 		args->loop_nb = micro_atoi(av[5]);
+	args->time.start = (struct timeval *)malloc(sizeof(struct timeval));
+	args->time.end = (struct timeval *)malloc(sizeof(struct timeval));
+	gettimeofday(args->time.start, NULL);
 }
 
 //initialize mutexes

@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:23:51 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/18 20:03:57 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/20 01:17:01 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,10 @@ void	exiter(t_pdata *pdata)
 		free(pdata->mtxa.mtx);
 	if (pdata->pta.pt)
 		free(pdata->pta.pt);
+	if (pdata->args.time.start)
+		free(pdata->args.time.start);
+	if (pdata->args.time.end)
+		free(pdata->args.time.end);
 	exit(EXIT_SUCCESS);
 }
 

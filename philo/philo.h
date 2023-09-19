@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/18 20:10:47 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/20 01:11:30 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 //usleep
 # include <unistd.h>
 
+//gettimeofday
+# include <sys/time.h>
+
 /*macros*/
 
 //error codes (simulating errno)
@@ -35,15 +38,23 @@
 
 /*data structures*/
 
+//time struct
+typedef struct s_time
+{
+	struct timeval	*start;
+	struct timeval	*end;
+}	t_time;
+
 //argument data structure
 typedef struct s_arguments
 {
-	int	p_nb;
-	int	f_nb;
-	int	t2d;
-	int	t2e;
-	int	t2s;
-	int	loop_nb;
+	int		p_nb;
+	int		f_nb;
+	int		t2d;
+	int		t2e;
+	int		t2s;
+	int		loop_nb;
+	t_time	time;
 }		t_arguments;
 
 //data array of pthreads
