@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/20 01:11:30 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/20 23:41:09 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_mutex_array
 typedef struct s_pdata
 {
 	int				id;
+	int				status;
 	t_arguments		args;
 	t_pthread_array	pta;
 	t_mutex_array	mtxa;
@@ -85,36 +86,46 @@ typedef struct s_pdata
 /**********************/
 
 //error handler
-void	error(int type, t_pdata *pdata);
+void		error(int type, t_pdata *pdata);
 
 //exit the program in a clean way
-void	exiter(t_pdata *pdata);
+void		exiter(t_pdata *pdata);
 
 //create threads, mutexes and run a simulation to test these
-int		main(int ac, char **av);
+int			main(int ac, char **av);
 
 /**********************/
 /*        init        */
 /**********************/
 
-//very basic string to number conversion
-int		micro_atoi(char *str);
-
 //convert arguments into integer values and assign them to a structure
-void	arg2struct(int ac, char **av, t_arguments *args);
+void		arg2struct(int ac, char **av, t_arguments *args);
 
 //initialize mutexes
-void	mk_mutexes(t_arguments *args, t_mutex_array *mtxa, t_pdata *pdata);
+void		mk_mutexes(t_arguments *args, t_mutex_array *mtxa, t_pdata *pdata);
 
 //initialize pthreads
-void	mk_pthreads(t_arguments *args, t_pthread_array *pta,
-			t_mutex_array *mtxa, t_pdata *pdata);
+void		mk_pthreads(t_arguments *args, t_pthread_array *pta,
+				t_mutex_array *mtxa, t_pdata *pdata);
 
 /**********************/
 /*       logic        */
 /**********************/
 
+//making sure the same fork can't be grabbed twice by mutex protection
+void		fork_handler(t_pdata *pdata, int lf, int rf);
+
 //philisopher's behavior
-void	*routine(void *p_id_ptr);
+void		*routine(void *p_id_ptr);
+
+/**********************/
+/*       utils        */
+/**********************/
+
+//very basic string to number conversion
+int			micro_atoi(char *str);
+
+//fetch the timestamp
+long int	get_ts(t_pdata *pdata);
 
 #endif
