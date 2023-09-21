@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 19:37:10 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/20 23:25:11 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/21 23:53:10 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	arg2struct(int ac, char **av, t_arguments *args)
 	args->t2s = micro_atoi(av[4]);
 	if (ac == 6)
 		args->loop_nb = micro_atoi(av[5]);
+	else
+		args->loop_nb = -1;
 	args->time.start = (struct timeval *)malloc(sizeof(struct timeval));
 	gettimeofday(args->time.start, NULL);
 	args->time.end = (struct timeval *)malloc(sizeof(struct timeval));
@@ -59,7 +61,7 @@ void	mk_pthreads(t_arguments *args, t_pthread_array *pta,
 		pdata->args = *args;
 		pdata->mtxa = *mtxa;
 		pdata->id = i + 1;
-		if (pthread_create(&pta->pt[i], NULL, routine, pdata))
+		if (pthread_create(&pta->pt[i], NULL, &routine, pdata))
 			error(MEM, pdata);
 	}
 	i = 0;

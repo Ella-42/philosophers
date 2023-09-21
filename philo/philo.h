@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/20 23:41:09 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/22 00:05:22 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,14 @@
 //error codes (simulating errno)
 # define ARGUMENT 22
 # define MEM 12
+
+//status indicators
+# define THINKING 0
+# define HUNGRY 0
+# define EATING 1
+# define FULL 1
+# define SLEEPING 2
+# define DEAD -1
 
 /*data structures*/
 
@@ -69,14 +77,26 @@ typedef struct s_mutex_array
 	pthread_mutex_t	*mtx;
 }					t_mutex_array;
 
+//data structure for the status of each philosopher
+typedef struct s_st
+{
+	int				*status;
+	int				*hunger;
+	int				*end;
+	long int		*timer;
+	pthread_t		dh;
+	pthread_mutex_t	sl;
+	pthread_mutex_t	dl;
+}				t_st;
+
 //philisopher data
 typedef struct s_pdata
 {
 	int				id;
-	int				status;
 	t_arguments		args;
 	t_pthread_array	pta;
 	t_mutex_array	mtxa;
+	t_st			st;
 }					t_pdata;
 
 /*functions*/
@@ -112,11 +132,14 @@ void		mk_pthreads(t_arguments *args, t_pthread_array *pta,
 /*       logic        */
 /**********************/
 
+//check for deaths or when the simulation is supposed to end
+void		*end_handler(void *pdata_ptr);
+
 //making sure the same fork can't be grabbed twice by mutex protection
-void		fork_handler(t_pdata *pdata, int lf, int rf);
+void		status_handler(t_pdata *pdata, int lf, int rf);
 
 //philisopher's behavior
-void		*routine(void *p_id_ptr);
+void		*routine(void *pdata_ptr);
 
 /**********************/
 /*       utils        */
