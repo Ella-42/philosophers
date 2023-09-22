@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/22 00:05:22 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/22 21:27:41 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,10 @@ typedef struct s_st
 {
 	int				*status;
 	int				*hunger;
-	int				*end;
+	int				*times_ate;
 	long int		*timer;
 	pthread_t		dh;
-	pthread_mutex_t	sl;
-	pthread_mutex_t	dl;
+	pthread_mutex_t	lock;
 }				t_st;
 
 //philisopher data
@@ -137,6 +136,9 @@ void		*end_handler(void *pdata_ptr);
 
 //making sure the same fork can't be grabbed twice by mutex protection
 void		status_handler(t_pdata *pdata, int lf, int rf);
+
+//initialize the data behind the status, death and times ate handlers
+void		init_checks(t_pdata *pdata);
 
 //philisopher's behavior
 void		*routine(void *pdata_ptr);

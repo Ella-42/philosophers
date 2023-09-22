@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:23:51 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/21 23:05:38 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/22 17:14:55 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ void	exiter(t_pdata *pdata)
 		free(pdata->args.time.end);
 	if (pdata->st.status)
 		free(pdata->st.status);
-	if (pdata->st.end)
-		free(pdata->st.end);
+	if (pdata->st.times_ate)
+		free(pdata->st.times_ate);
 	if (pdata->st.timer)
 		free(pdata->st.timer);
 	exit(EXIT_SUCCESS);
