@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 22:38:33 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/22 21:27:44 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/22 23:02:08 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,22 @@ void	*end_handler(void *pdata_ptr)
 	t_pdata	*pdata;
 
 	pdata = (t_pdata *)pdata_ptr;
-	while (1)
+	while (pdata->status != END)
 	{
 		if (pthread_mutex_lock(&pdata->st.lock) != 0)
 			printf("Mutex lock error inside death handler\n");
 		usleep(1000);
 		if ((get_ts(pdata) - pdata->st.timer[pdata->id - 1]) >= pdata->args.t2d)
 		{
+			pdata->status = END;
 			printf("%ld %i died\n", get_ts(pdata), pdata->id);
 			exiter(pdata);
 		}
 		if (pdata->st.times_ate[pdata->id - 1] == pdata->args.loop_nb)
+		{
+			pdata->status = END;
 			exiter(pdata);
+		}
 		if (pthread_mutex_unlock(&pdata->st.lock) != 0)
 			printf("Mutex unlock error inside death handler\n");
 	}
@@ -54,10 +58,10 @@ void	status_handler(t_pdata *pdata, int lf, int rf)
 	if (pthread_mutex_unlock(&pdata->mtxa.mtx[rf - 1]) != 0)
 		printf("Mutex unlock error on fork %i\n", rf);
 	pdata->st.times_ate[pdata->id - 1] += 1;
-	pdata->st.status[pdata->id] = SLEEPING;
+	pdata->st.status[pdata->id - 1] = SLEEPING;
 	printf("%ld %i is sleeping\n", get_ts(pdata), pdata->id);
 	usleep(pdata->args.t2s * 1000);
-	pdata->st.status[pdata->id] = THINKING;
+	pdata->st.status[pdata->id - 1] = THINKING;
 	printf("%ld %i is thinking\n", get_ts(pdata), pdata->id);
 }
 
@@ -72,6 +76,7 @@ void	init_checks(t_pdata *pdata)
 		error(MEM, pdata);
 	pdata->st.status[pdata->id - 1] = THINKING;
 	pdata->st.hunger[pdata->id - 1] = HUNGRY;
+	pdata->status = RUNNING;
 }
 
 //philisopher's behavior
@@ -91,7 +96,7 @@ void	*routine(void *pdata_ptr)
 	init_checks(pdata);
 	if (pdata->id % 2 != 0)
 		usleep(1000);
-	while (1)
+	while (pdata->status != END)
 		status_handler(pdata, lf, rf);
 	pthread_join(pdata->st.dh, NULL);
 	free(pdata);

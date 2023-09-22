@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/22 21:27:41 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/22 23:02:16 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@
 //status indicators
 # define THINKING 0
 # define HUNGRY 0
+# define RUNNING 0
 # define EATING 1
 # define FULL 1
+# define END 1
 # define SLEEPING 2
 # define DEAD -1
 
@@ -92,6 +94,7 @@ typedef struct s_st
 typedef struct s_pdata
 {
 	int				id;
+	int				status;
 	t_arguments		args;
 	t_pthread_array	pta;
 	t_mutex_array	mtxa;
