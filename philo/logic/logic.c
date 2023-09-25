@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 22:38:33 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/22 23:02:08 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/25 19:14:15 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,29 @@
 void	*end_handler(void *pdata_ptr)
 {
 	t_pdata	*pdata;
+	int		i;
 
 	pdata = (t_pdata *)pdata_ptr;
-	while (pdata->status != END)
+	usleep(1000);
+	while (pdata->st.end != END)
 	{
 		if (pthread_mutex_lock(&pdata->st.lock) != 0)
-			printf("Mutex lock error inside death handler\n");
-		usleep(1000);
-		if ((get_ts(pdata) - pdata->st.timer[pdata->id - 1]) >= pdata->args.t2d)
+			printf("Mutex lock error inside death handler for philosopher %i\n",
+				pdata->id);
+		i = -1;
+		while (i < pdata->args.p_nb - 1)
 		{
-			pdata->status = END;
-			printf("%ld %i died\n", get_ts(pdata), pdata->id);
-			exiter(pdata);
+			if ((get_ts(pdata) - pdata->st.timer[i++]) >= pdata->args.t2d)
+			{
+				printf("%ld %i died\n", get_ts(pdata), i + 1);
+				pdata->st.end = END;
+			}
 		}
 		if (pdata->st.times_ate[pdata->id - 1] == pdata->args.loop_nb)
-		{
-			pdata->status = END;
-			exiter(pdata);
-		}
+			pdata->st.end = END;
 		if (pthread_mutex_unlock(&pdata->st.lock) != 0)
-			printf("Mutex unlock error inside death handler\n");
+			printf("Mutex unlock error inside death handler"
+				"for philosopher %i\n", pdata->id);
 	}
 	return (NULL);
 }
@@ -74,9 +77,28 @@ void	init_checks(t_pdata *pdata)
 	pdata->st.timer = (long int *)malloc(sizeof(long int) * pdata->args.p_nb);
 	if ((!pdata->st.timer) || (!pdata->st.status) || (!pdata->st.times_ate))
 		error(MEM, pdata);
+	if (pthread_mutex_init(&pdata->st.lock, NULL))
+		error(MEM, pdata);
 	pdata->st.status[pdata->id - 1] = THINKING;
 	pdata->st.hunger[pdata->id - 1] = HUNGRY;
-	pdata->status = RUNNING;
+	pdata->st.times_ate[pdata->id - 1] = 0;
+	pdata->st.timer[pdata->id - 1] = 0;
+	pdata->st.end = RUNNING;
+}
+
+//free any data associated with the indivdual philosophers
+void	free_data(t_pdata *pdata)
+{
+	pthread_mutex_destroy(&pdata->st.lock);
+	if (pdata->st.status)
+		free(pdata->st.status);
+	if (pdata->st.hunger)
+		free(pdata->st.hunger);
+	if (pdata->st.times_ate)
+		free(pdata->st.times_ate);
+	if (pdata->st.timer)
+		free(pdata->st.timer);
+	free(pdata);
 }
 
 //philisopher's behavior
@@ -89,16 +111,15 @@ void	*routine(void *pdata_ptr)
 	pdata = (t_pdata *)pdata_ptr;
 	if (pdata == NULL)
 		error(MEM, pdata);
+	init_checks(pdata);
 	rf = pdata->id - 1;
 	lf = pdata->id;
 	if (pdata->id == 1)
 		rf = pdata->args.p_nb;
-	init_checks(pdata);
 	if (pdata->id % 2 != 0)
 		usleep(1000);
-	while (pdata->status != END)
+	while (pdata->st.end != END)
 		status_handler(pdata, lf, rf);
-	pthread_join(pdata->st.dh, NULL);
-	free(pdata);
+	free_data(pdata);
 	return (NULL);
 }

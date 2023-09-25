@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/22 23:02:16 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/25 19:13:26 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_time
 {
 	struct timeval	*start;
 	struct timeval	*end;
-}	t_time;
+}					t_time;
 
 //argument data structure
 typedef struct s_arguments
@@ -65,7 +65,7 @@ typedef struct s_arguments
 	int		t2s;
 	int		loop_nb;
 	t_time	time;
-}		t_arguments;
+}			t_arguments;
 
 //data array of pthreads
 typedef struct s_pthread_array
@@ -82,19 +82,19 @@ typedef struct s_mutex_array
 //data structure for the status of each philosopher
 typedef struct s_st
 {
+	int				end;
 	int				*status;
 	int				*hunger;
 	int				*times_ate;
 	long int		*timer;
-	pthread_t		dh;
 	pthread_mutex_t	lock;
-}				t_st;
+	pthread_t		dh;
+}					t_st;
 
 //philisopher data
 typedef struct s_pdata
 {
 	int				id;
-	int				status;
 	t_arguments		args;
 	t_pthread_array	pta;
 	t_mutex_array	mtxa;
@@ -142,6 +142,9 @@ void		status_handler(t_pdata *pdata, int lf, int rf);
 
 //initialize the data behind the status, death and times ate handlers
 void		init_checks(t_pdata *pdata);
+
+//free any data associated with the indivdual philosophers
+void		free_data(t_pdata *pdata);
 
 //philisopher's behavior
 void		*routine(void *pdata_ptr);
