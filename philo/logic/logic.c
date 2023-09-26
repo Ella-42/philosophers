@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 22:38:33 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/25 19:14:15 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/26 20:26:23 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,24 @@ void	*end_handler(void *pdata_ptr)
 	while (pdata->st.end != END)
 	{
 		if (pthread_mutex_lock(&pdata->st.lock) != 0)
-			printf("Mutex lock error inside death handler for philosopher %i\n",
-				pdata->id);
+			printf("Mutex lock error inside death handler\n");
 		i = -1;
-		while (i < pdata->args.p_nb - 1)
+		while (i++ < pdata->args.p_nb - 1)
 		{
-			if ((get_ts(pdata) - pdata->st.timer[i++]) >= pdata->args.t2d)
+			//printf("time for %i: %ld\n", i + 1,
+				//pdata->st.timer[i]);
+			if ((get_ts(pdata) - pdata->st.timer[i]) >= pdata->args.t2d)
 			{
-				printf("%ld %i died\n", get_ts(pdata), i + 1);
 				pdata->st.end = END;
+				printf("%ld %i died\n", get_ts(pdata), i + 1);
+				break ;
 			}
 		}
 		if (pdata->st.times_ate[pdata->id - 1] == pdata->args.loop_nb)
 			pdata->st.end = END;
 		if (pthread_mutex_unlock(&pdata->st.lock) != 0)
-			printf("Mutex unlock error inside death handler"
-				"for philosopher %i\n", pdata->id);
+			printf("Mutex unlock error inside death handler\n");
+		//usleep(100000);
 	}
 	return (NULL);
 }
@@ -54,8 +56,13 @@ void	status_handler(t_pdata *pdata, int lf, int rf)
 	printf("%ld %i has taken a fork\n", get_ts(pdata), pdata->id);
 	pdata->st.status[pdata->id - 1] = EATING;
 	printf("%ld %i is eating\n", get_ts(pdata), pdata->id);
-	usleep(pdata->args.t2e * 1000);
+	if (pdata->st.end != END)
+		usleep(pdata->args.t2e * 1000);
+	//printf("timer in thread %i: %ld\n", pdata->id,
+		//pdata->st.timer[pdata->id - 1]);
 	pdata->st.timer[pdata->id - 1] = get_ts(pdata);
+	//printf("timer in thread %i: %ld\n", pdata->id,
+		//pdata->st.timer[pdata->id - 1]);
 	if (pthread_mutex_unlock(&pdata->mtxa.mtx[lf - 1]) != 0)
 		printf("Mutex unlock error on fork %i\n", lf);
 	if (pthread_mutex_unlock(&pdata->mtxa.mtx[rf - 1]) != 0)
@@ -63,7 +70,8 @@ void	status_handler(t_pdata *pdata, int lf, int rf)
 	pdata->st.times_ate[pdata->id - 1] += 1;
 	pdata->st.status[pdata->id - 1] = SLEEPING;
 	printf("%ld %i is sleeping\n", get_ts(pdata), pdata->id);
-	usleep(pdata->args.t2s * 1000);
+	if (pdata->st.end != END)
+		usleep(pdata->args.t2s * 1000);
 	pdata->st.status[pdata->id - 1] = THINKING;
 	printf("%ld %i is thinking\n", get_ts(pdata), pdata->id);
 }
@@ -89,7 +97,12 @@ void	init_checks(t_pdata *pdata)
 //free any data associated with the indivdual philosophers
 void	free_data(t_pdata *pdata)
 {
+	int	i;
+
 	pthread_mutex_destroy(&pdata->st.lock);
+	i = 0;
+	while (i < pdata->args.p_nb)
+		pthread_detach(pdata->pta.pt[i++]);
 	if (pdata->st.status)
 		free(pdata->st.status);
 	if (pdata->st.hunger)

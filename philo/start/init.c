@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 19:37:10 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/25 19:14:06 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/26 17:29:44 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,6 @@ void	mk_pthreads(t_arguments *args, t_pthread_array *pta,
 			error(MEM, pdata);
 	}
 	pthread_create(&pdata->st.dh, NULL, &end_handler, pdata);
-	i = 0;
-	while (i < args->p_nb)
-		pthread_join(pta->pt[i++], NULL);
 	pthread_join(pdata->st.dh, NULL);
 	i = 0;
 	while (i < args->f_nb)
