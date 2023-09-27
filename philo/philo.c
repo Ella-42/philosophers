@@ -6,43 +6,40 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:23:51 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/26 21:32:17 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/27 23:31:50 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-//error handler
-void	error(int type, t_pdata *pdata)
+//exit the program in a clean way
+int	exiter(int type, t_pdata *pdata, t_pthread_array *pta, t_mutex_array *mtxa)
 {
 	if (type == ARGUMENT)
-		printf("Error:\nInvalid argument(s)\nUsage: ./philo "
-			"number_of_philosophers time_to_die time_to_eat time_to_sleep "
-			"[number_of_times_each_philosopher_must_eat]\n");
-	else if (type == MEM)
 	{
-		perror("Malloc");
-		if (pdata->mtxa.mtx)
-			free(pdata->mtxa.mtx);
-		if (pdata->pta.pt)
-			free(pdata->pta.pt);
-		if (pdata)
+		printf("Error:\nInvalid argument(s)\n");
+		return (1);
+	}
+	if (type == MEM)
+	{
+		free(pdata->mtxa.mtx);
+		free(pdata->args.time.start);
+		free(pdata->args.time.end);
+	}
+	if (type == PDATA || type == ALL)
+	{
+		free(mtxa->mtx);
+		free(mtxa->args.time.start);
+		free(mtxa->args.time.end);
+		free(pta->pt);
+		if (pdata != NULL)
 			free(pdata);
 	}
-	exit(type);
-}
-
-//exit the program in a clean way
-void	exiter(t_pdata *pdata)
-{
-	if (pdata->mtxa.mtx)
-		free(pdata->mtxa.mtx);
-	if (pdata->pta.pt)
-		free(pdata->pta.pt);
-	if (pdata->args.time.start)
-		free(pdata->args.time.start);
-	if (pdata->args.time.end)
-		free(pdata->args.time.end);
+	if (type == THREAD)
+		free_data(pdata);
+	if (type == ALL)
+		return (0);
+	return (1);
 }
 
 //create threads, mutexes and run a simulation to test these
@@ -51,9 +48,12 @@ int	main(int ac, char **av)
 	t_pdata	pdata;
 
 	if (ac != 5 && ac != 6)
-		error(ARGUMENT, NULL);
-	arg2struct(ac, av, &pdata.args);
-	mk_mutexes(&pdata.args, &pdata.mtxa, &pdata);
-	mk_pthreads(&pdata.args, &pdata.pta, &pdata.mtxa, &pdata);
-	exiter(&pdata);
+		return (exiter(ARGUMENT, NULL, NULL, NULL));
+	if (arg2struct(ac, av, &pdata.args))
+		return (1);
+	if (mk_mutexes(&pdata.args, &pdata.mtxa, &pdata))
+		return (1);
+	if (mk_pthreads(&pdata.args, &pdata.pta, &pdata.mtxa, &pdata))
+		return (1);
+	return (exiter(ALL, NULL, &pdata.pta, &pdata.mtxa));
 }

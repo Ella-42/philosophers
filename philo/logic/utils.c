@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 21:50:35 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/21 00:14:05 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/27 22:21:37 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	micro_atoi(char *str)
 	str_cpy = str;
 	while (*str_cpy != '\0')
 		if (*str_cpy < '0' || '9' < *str_cpy++)
-			error(ARGUMENT, NULL);
+			return (0);
 	nb = 0;
 	while (*str != '\0')
 		nb = nb * 10 + (*str++ - 48);

@@ -6,7 +6,7 @@
 /*   By: lpeeters <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 21:25:21 by lpeeters          #+#    #+#             */
-/*   Updated: 2023/09/26 21:32:27 by lpeeters         ###   ########.fr       */
+/*   Updated: 2023/09/27 23:06:18 by lpeeters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 
 /*libraries*/
 
-//exit, malloc, free
+//malloc, free
 # include <stdlib.h>
 
-//printf, perror
+//printf
 # include <stdio.h>
 
-//pthread_create
+//pthread functions
 # include <pthread.h>
 
 //usleep
@@ -35,6 +35,9 @@
 //error codes (simulating errno)
 # define ARGUMENT 22
 # define MEM 12
+# define THREAD -12
+# define PDATA 1212
+# define ALL 0
 
 //status indicators
 # define THINKING 0
@@ -76,6 +79,7 @@ typedef struct s_pthread_array
 //data array of mutexes
 typedef struct s_mutex_array
 {
+	t_arguments		args;
 	pthread_mutex_t	*mtx;
 }					t_mutex_array;
 
@@ -87,6 +91,7 @@ typedef struct s_st
 	int				*hunger;
 	int				*times_ate;
 	long int		*timer;
+	pthread_mutex_t	plock;
 	pthread_mutex_t	lock;
 	pthread_t		dh;
 }					t_st;
@@ -107,11 +112,9 @@ typedef struct s_pdata
 /*       philo        */
 /**********************/
 
-//error handler
-void		error(int type, t_pdata *pdata);
-
 //exit the program in a clean way
-void		exiter(t_pdata *pdata);
+int			exiter(int type, t_pdata *pdata, t_pthread_array *pta,
+				t_mutex_array *mtxa);
 
 //create threads, mutexes and run a simulation to test these
 int			main(int ac, char **av);
@@ -121,13 +124,13 @@ int			main(int ac, char **av);
 /**********************/
 
 //convert arguments into integer values and assign them to a structure
-void		arg2struct(int ac, char **av, t_arguments *args);
+int			arg2struct(int ac, char **av, t_arguments *args);
 
 //initialize mutexes
-void		mk_mutexes(t_arguments *args, t_mutex_array *mtxa, t_pdata *pdata);
+int			mk_mutexes(t_arguments *args, t_mutex_array *mtxa, t_pdata *pdata);
 
 //initialize pthreads
-void		mk_pthreads(t_arguments *args, t_pthread_array *pta,
+int			mk_pthreads(t_arguments *args, t_pthread_array *pta,
 				t_mutex_array *mtxa, t_pdata *pdata);
 
 /**********************/
@@ -135,13 +138,13 @@ void		mk_pthreads(t_arguments *args, t_pthread_array *pta,
 /**********************/
 
 //check for deaths or when the simulation is supposed to end
-void		*end_handler(void *pdata_ptr);
+int			end_handler(t_pdata *pdata);
 
 //making sure the same fork can't be grabbed twice by mutex protection
 void		status_handler(t_pdata *pdata, int lf, int rf);
 
 //initialize the data behind the status, death and times ate handlers
-void		init_checks(t_pdata *pdata);
+int			init_checks(t_pdata *pdata);
 
 //free any data associated with the indivdual philosophers
 void		free_data(t_pdata *pdata);
